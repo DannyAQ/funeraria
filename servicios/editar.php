@@ -1,4 +1,4 @@
-```php
+
 <?php
 require '../config.php';
 
@@ -119,4 +119,3 @@ $a = $stmt->fetch(PDO::FETCH_ASSOC);
 
 </body>
 </html>
-```
