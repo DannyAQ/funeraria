@@ -1,0 +1,7 @@
+
+
+COMO EJECUTARLO
+  1. Copie la carpeta en C:\wamp64\www\ (o C:\xampp\htdocs\).
+  2. Inicie WampServer o XAMPP (icono en verde).
+  3. Abra http://localhost/funeraria/index.php
+

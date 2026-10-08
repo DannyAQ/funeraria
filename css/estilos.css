@@ -1,0 +1,36 @@
+/* ============================================================
+   Estilos estandar del curso - Minimarket "La Esquina"
+   Colores UNIPAZ: azul #273475, verde #00963F
+   Cargue esta hoja en cada pagina:
+   <link rel="stylesheet" href="css/estilos.css">   (o ../css/estilos.css)
+   ============================================================ */
+* { box-sizing: border-box; }
+body { font-family: "Segoe UI", Arial, sans-serif; background: #eef1f6; color: #b37606; margin: 0; }
+.barra { background: #0e0901; color: #fff; padding: 14px 22px; }
+.barra h1 { margin: 0; font-size: 1.2rem; }
+.barra span { font-size: .82rem; opacity: .85; }
+.franja { height: 4px; background: linear-gradient(90deg, #a39763 0 62%, #00963f 62% 100%); }
+.menu { background: #fff; border-bottom: 1px solid #c8cee0; padding: 10px 22px; display: flex; gap: 8px; flex-wrap: wrap; }
+.menu a { color: #000105; text-decoration: none; font-size: .88rem; padding: 6px 12px; border-radius: 4px; border: 1px solid #e0e4f0; }
+.menu a:hover { background: #e7eaf6; }
+.menu a.activo { background: #5c5954; color: #fff; border-color: #000000; }
+.contenedor { max-width: 860px; margin: 22px auto; background: #fff; padding: 22px 26px; border-radius: 6px; border: 1px solid #c8cee0; }
+h2 { color: #282d47; margin-top: 0; }
+.mensaje { background: #e2f3e9; color: #0b7a38; border: 1px solid #00963f; padding: 10px 14px; border-radius: 4px; margin: 12px 0; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { border: 1px solid #c8cee0; padding: 8px 10px; text-align: left; }
+th { background: #272935; color: #fff; font-weight: 600; }
+tr:nth-child(even) td { background: #f5f7fb; }
+tfoot td { background: #e7eaf6 !important; font-weight: 700; color: #273475; }
+label { display: block; margin-top: 12px; font-weight: 600; font-size: .9rem; }
+input { width: 100%; padding: 9px 11px; margin-top: 4px; border: 1px solid #c8cee0; border-radius: 4px; font-size: .95rem; }
+.boton, button { display: inline-block; margin-top: 16px; padding: 10px 18px; background: #00963f; color: #fff; border: 0; border-radius: 4px; text-decoration: none; font-size: .92rem; cursor: pointer; }
+.boton:hover, button:hover { filter: brightness(1.1); }
+.boton-azul { background: #273475; }
+.acciones a { margin-right: 10px; font-size: .86rem; color: #273475; text-decoration: none; }
+.acciones a.borrar { color: #b34706; }
+.acciones a:hover { text-decoration: underline; }
+.tarjetas { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+.tarjeta { flex: 1; min-width: 150px; background: #f5f7fb; border: 1px solid #c8cee0; border-left: 4px solid #00963f; border-radius: 4px; padding: 12px 14px; }
+.tarjeta .num { font-size: 1.5rem; font-weight: 700; color: #273475; }
+.tarjeta .et { font-size: .8rem; color: #414a68; }
