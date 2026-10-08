@@ -1,4 +1,3 @@
-
 <?php
 require '../config.php';
 
@@ -6,11 +5,11 @@ require '../config.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id       = $_POST['id'];
     $nombre   = trim($_POST['nombre']);
-    $contacto = trim($_POST['contacto']);
-    $ciudad   = trim($_POST['ciudad']);
+    $precio   = trim($_POST['precio']);
+    $cantidad = trim($_POST['cantidad']);
 
     // Traer la foto actual por si no se sube una nueva
-    $stmt = $pdo->prepare("SELECT foto FROM proveedores WHERE id = :id");
+    $stmt = $pdo->prepare("SELECT foto FROM servicios WHERE id = :id");
     $stmt->execute(['id' => $id]);
     $fotoActual = $stmt->fetchColumn();
 
@@ -40,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'image/webp' => 'webp'
         };
 
-        $nombreArchivo = uniqid('proveedor_', true) . '.' . $extension;
-        $carpeta = '../img/proveedores/';
+        $nombreArchivo = uniqid('servicio_', true) . '.' . $extension;
+        $carpeta = '../img/servicios/';
 
         if (!is_dir($carpeta)) {
             mkdir($carpeta, 0755, true);
@@ -51,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             die('No se pudo guardar la imagen.');
         }
 
-        $rutaBD = '../img/proveedores/' . $nombreArchivo;
+        $rutaBD = '../img/servicios/' . $nombreArchivo;
 
         // Borrar la foto anterior del servidor
         if ($fotoActual && file_exists($fotoActual)) {
@@ -59,56 +58,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $sql = "UPDATE proveedores
-            SET nombre = :nombre, contacto = :contacto, ciudad = :ciudad, foto = :foto
+    $sql = "UPDATE servicios
+            SET nombre = :nombre, precio = :precio, cantidad = :cantidad, foto = :foto
             WHERE id = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         'nombre'   => $nombre,
-        'contacto' => $contacto,
-        'ciudad'   => $ciudad,
+        'precio'   => $precio,
+        'cantidad' => $cantidad,
         'foto'     => $rutaBD,
         'id'       => $id
     ]);
 
-    header("Location: index.php?mensaje=Proveedor actualizado");
+    header("Location: index.php?mensaje=Servicio actualizado");
     exit;
 }
 
 // UPDATE parte 2: traer los datos actuales
-$id = $_GET['id'];
-$stmt = $pdo->prepare("SELECT * FROM proveedores WHERE id = :id");
+$id = $_GET['id'] ?? null;
+
+if (!$id) {
+    die('Falta el id del servicio.');
+}
+
+$stmt = $pdo->prepare("SELECT * FROM servicios WHERE id = :id");
 $stmt->execute(['id' => $id]);
-$r = $stmt->fetch(PDO::FETCH_ASSOC);
+$a = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$a) {
+    die('Servicio no encontrado.');
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head><meta charset="utf-8"><title>Editar proveedor</title>
-<link rel="stylesheet" href="../css/estilos.css"></head>
+<head>
+  <meta charset="utf-8">
+  <title>Editar servicio</title>
+  <link rel="stylesheet" href="../css/estilos.css">
+</head>
 <body>
-  <div class="barra"><h1>Funeraria</h1><span>Editar proveedor</span></div>
+  <div class="barra">
+    <h1>Funeraria</h1>
+    <span>Editar servicio funerario</span>
+  </div>
   <div class="franja"></div>
   <div class="contenedor">
-    <h2>Editar proveedor</h2>
+    <h2>Editar servicio funerario</h2>
     <form method="post" action="editar.php" enctype="multipart/form-data">
-      <input type="hidden" name="id" value="<?php echo htmlspecialchars($r['id']); ?>">
+      <input type="hidden" name="id" value="<?php echo htmlspecialchars($a['id']); ?>">
 
-      <label for="nombre">Nombre</label>
+      <label for="nombre">Nombre del servicio</label>
       <input type="text" id="nombre" name="nombre"
-             value="<?php echo htmlspecialchars($r['nombre']); ?>" required>
+             value="<?php echo htmlspecialchars($a['nombre']); ?>" required>
 
-      <label for="contacto">Contacto</label>
-      <input type="text" id="contacto" name="contacto"
-             value="<?php echo htmlspecialchars($r['contacto']); ?>" required>
+      <label for="precio">Valor del servicio</label>
+      <input type="number" id="precio" name="precio" step="1" min="0"
+             value="<?php echo htmlspecialchars($a['precio']); ?>" required>
 
-      <label for="ciudad">Ciudad</label>
-      <input type="text" id="ciudad" name="ciudad"
-             value="<?php echo htmlspecialchars($r['ciudad']); ?>" required>
+      <label for="cantidad">Cantidad de servicios disponibles</label>
+      <input type="number" id="cantidad" name="cantidad" step="1" min="0"
+             value="<?php echo htmlspecialchars($a['cantidad']); ?>" required>
 
       <label>Imagen actual</label><br>
-      <?php if (!empty($r['foto'])): ?>
-        <img src="<?php echo htmlspecialchars($r['foto']); ?>"
-             alt="Imagen de <?php echo htmlspecialchars($r['nombre']); ?>"
+      <?php if (!empty($a['foto'])): ?>
+        <img src="<?php echo htmlspecialchars($a['foto']); ?>"
+             alt="Imagen de <?php echo htmlspecialchars($a['nombre']); ?>"
              style="max-width:150px; border-radius:8px;">
       <?php else: ?>
         <p>Sin imagen</p>
@@ -119,7 +133,8 @@ $r = $stmt->fetch(PDO::FETCH_ASSOC);
       <input type="file" id="foto" name="foto"
              accept="image/jpeg,image/png,image/webp">
 
-      <br><button type="submit">Guardar cambios</button>
+      <br>
+      <button type="submit">Guardar cambios</button>
       <a class="boton boton-azul" href="index.php">Cancelar</a>
     </form>
   </div>
