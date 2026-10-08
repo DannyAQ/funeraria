@@ -129,7 +129,7 @@ if (!$a) {
       <?php endif; ?>
       <br>
 
-      <label for="foto">Cambiar imagen (opcional)</label>
+      <label for="foto">Cambiar imagen </label>
       <input type="file" id="foto" name="foto"
              accept="image/jpeg,image/png,image/webp">
 
