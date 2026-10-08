@@ -25,10 +25,16 @@ $filas = $pdo->query("SELECT * FROM clientes ORDER BY id DESC")->fetchAll(PDO::F
       <p class="mensaje"><?php echo htmlspecialchars($_GET['mensaje']); ?></p>
     <?php endif; ?>
     <table>
-      <tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Telefono</th><th>Acciones</th></tr>
+      <tr><th>ID</th><th>Foto</th><th>Nombre</th><th>Correo</th><th>Telefono</th><th>Acciones</th></tr>
       <?php foreach ($filas as $r): ?>
         <tr>
           <td><?php echo $r['id']; ?></td>
+          <td>
+            <img src=<?php echo htmlspecialchars($r['foto']); ?>
+                 alt="Foto del cliente"
+                 width="100"
+                 height="100">
+          </td>
           <td><?php echo htmlspecialchars($r['nombre']); ?></td>
           <td><?php echo htmlspecialchars($r['correo']); ?></td>
           <td><?php echo htmlspecialchars($r['telefono']); ?></td>
