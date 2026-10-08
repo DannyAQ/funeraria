@@ -1,4 +1,3 @@
-
 <?php
 require '../config.php';
 
@@ -9,15 +8,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $precio   = trim($_POST['precio']);
     $cantidad = trim($_POST['cantidad']);
 
-    $sql = "INSERT INTO servicios (nombre, precio, cantidad)
-            VALUES (:nombre, :precio, :cantidad)";
+    if (!isset($_FILES['foto']) || $_FILES['foto']['error'] !== UPLOAD_ERR_OK) {
+        die('Error al subir la imagen.');
+    }
+
+    $tipo = mime_content_type($_FILES['foto']['tmp_name']);
+
+    $tiposPermitidos = [
+        'image/jpeg',
+        'image/png',
+        'image/webp'
+    ];
+
+    if (!in_array($tipo, $tiposPermitidos)) {
+        die('Solo se permiten imágenes JPG, PNG o WEBP.');
+    }
+
+    $tamañoMaximo = 5 * 1024 * 1024;
+
+    if ($_FILES['foto']['size'] > $tamañoMaximo) {
+        die('La imagen no puede superar los 5 MB.');
+    }
+
+    $extension = match ($tipo) {
+        'image/jpeg' => 'jpg',
+        'image/png'  => 'png',
+        'image/webp' => 'webp'
+    };
+
+    $nombreArchivo = uniqid('servicio_', true) . '.' . $extension;
+
+    $carpeta = '../img/servicios/';
+
+    if (!is_dir($carpeta)) {
+        mkdir($carpeta, 0755, true);
+    }
+
+    $rutaArchivo = $carpeta . $nombreArchivo;
+
+    if (!move_uploaded_file(
+        $_FILES['foto']['tmp_name'],
+        $rutaArchivo
+    )) {
+        die('No se pudo guardar la imagen.');
+    }
+
+    $rutaBD = '../img/servicios/' . $nombreArchivo;
+
+
+    $sql = "INSERT INTO servicios (nombre, precio, cantidad, foto)
+            VALUES (:nombre, :precio, :cantidad, :foto)";
 
     $stmt = $pdo->prepare($sql);
 
     $stmt->execute([
         'nombre'   => $nombre,
         'precio'   => $precio,
-        'cantidad' => $cantidad
+        'cantidad' => $cantidad,
+        'foto'     => $rutaBD
     ]);
 
     header("Location: index.php?mensaje=Servicio agregado");
@@ -47,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <h2>Nuevo servicio funerario</h2>
 
-    <form method="post" action="crear.php">
+    <form method="post" action="crear.php" enctype="multipart/form-data">
 
       <label for="nombre">Nombre del servicio</label>
       <input
@@ -77,7 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         min="0"
         required
       >
-
+      <label for="foto">Imagen del servicio</label>
+      <input type="file" id="foto" name="foto" accept="image/jpeg,image/png,image/webp" required>
       <br>
 
       <button type="submit">Guardar servicio</button>

@@ -58,6 +58,7 @@ $total = $pdo->query(
 
       <tr>
         <th>ID</th>
+        <th>Foto</th>
         <th>Servicio</th>
         <th>Valor</th>
         <th>Cantidad</th>
@@ -72,6 +73,14 @@ $total = $pdo->query(
           <td>
             <?php echo $s['id']; ?>
           </td>
+          
+          <td>
+            <img src=<?php echo htmlspecialchars($s['foto']); ?>
+                 alt="Foto del servicio"
+                 width="100"
+                 height="100">
+          </td>
+
 
           <td>
             <?php echo htmlspecialchars($s['nombre']); ?>
